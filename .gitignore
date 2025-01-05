@@ -11,3 +11,5 @@ build-*/
 .build-*/
 docgen_tmp/
 .docgen_tmp/
+image.jpg
+image.ppm
