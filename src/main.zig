@@ -11,7 +11,7 @@ pub fn main() !void {
     const IMAGE_WIDTH: u32 = 256;
     const IMAGE_HEIGHT: u32 = 256;
 
-    std.debug.print("=> Starting Render\n", .{});
+    std.log.info("Starting Render\n", .{});
 
     // Create/Overwrite File
     const file = try std.fs.cwd().createFile("image.ppm", .{});
@@ -21,6 +21,8 @@ pub fn main() !void {
     try file.writeAll(header);
 
     for (0..IMAGE_HEIGHT) |j| {
+        std.log.info("Scanlines remaining: {d:0>3} ", .{IMAGE_HEIGHT - j});
+
         for (0..IMAGE_WIDTH) |i| {
             const r: f32 = @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(IMAGE_WIDTH-1));
             const g: f32 = @as(f32, @floatFromInt(j)) / @as(f32, @floatFromInt(IMAGE_HEIGHT-1));
@@ -34,12 +36,10 @@ pub fn main() !void {
             const pixel = try std.fmt.allocPrint(allocator, "{d} {d} {d}\n", .{ir, ig, ib});
             try file.writeAll(pixel);
         }
-
-        // std.debug.print("=> Line {d:0>3} complete\n", .{j});
     }
 
     // close file
     defer file.close();
 
-    std.debug.print("=> Render Complete!\n", .{});
+    std.log.info("\rRender Complete!\n", .{});
 }
