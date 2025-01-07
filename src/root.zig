@@ -1,3 +1,6 @@
+pub const Vec3 = @import("vec3.zig");
+pub const Ray = @import("ray.zig");
+
 const std = @import("std");
 const testing = std.testing;
 
