@@ -52,7 +52,21 @@ const PIXEL00_LOC = blk: {
     break :blk result.add_vv(VIEWPORT_UPPER_LEFT);
 };
 
-fn ray_color(ray: *Ray) Color {
+fn hit_sphere(center: Point3, radius: f64, r: Ray) bool {
+    const oc: Vec3 = center.sub_vv(r.origin);
+    const a = r.dir.dot_vv(r.dir);
+    const b = -2.0 * r.dir.dot_vv(oc);
+    const c = oc.dot_vv(oc) - radius * radius;
+    const discriminant = b * b - 4 * a * c;
+    return (discriminant >= 0);
+}
+
+fn ray_color(ray: Ray) Color {
+    const p = Point3.init(0, 0, -1);
+    if (hit_sphere(p, 0.5, ray)) {
+        return Color.init(1, 0, 0);
+    }
+
     const unit_direction = ray.dir.unitVector_v();
     const a = 0.5 * (unit_direction.y + 1.0);
     return Color.init(1.0, 1.0, 1.0).multiply_tv(1.0 - a).add_vv(Color.init(0.5, 0.7, 1.0).multiply_tv(a));
@@ -82,9 +96,9 @@ pub fn main() !void {
                 .add_vv(PIXEL_DELTA_U.multiply_tv(@as(f64, @floatFromInt(i))))
                 .add_vv(PIXEL_DELTA_V.multiply_tv(@as(f64, @floatFromInt(j))));
             const ray_direction = pixel_center.sub_vv(CAMERA_CENTER);
-            var r = Ray.init(CAMERA_CENTER, ray_direction);
+            const r = Ray.init(CAMERA_CENTER, ray_direction);
 
-            const pixel_color = ray_color(&r);
+            const pixel_color = ray_color(r);
 
             // PPM Pixel
             const pixel = try vec3.write_color_to_str(allocator, pixel_color);
