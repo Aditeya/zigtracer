@@ -132,6 +132,6 @@ pub fn write_color_to_str(
     const g = @as(u8, @intFromFloat(color.y));
     const b = @as(u8, @intFromFloat(color.z));
 
-    const pixel = try std.fmt.allocPrint(allocator, "{d} {d} {d}\n", .{r, g, b});
+    const pixel = try std.fmt.allocPrint(allocator, "{d} {d} {d}\n", .{ r, g, b });
     return pixel;
 }

@@ -25,7 +25,7 @@ const VIEWPORT_WIDTH = blk: {
     // viewport_height * (double(image_width)/image_height);
     const iw = @as(f64, @floatFromInt(IMAGE_WIDTH));
     const ih = @as(f64, @floatFromInt(IMAGE_HEIGHT));
-    const r = iw/ih;
+    const r = iw / ih;
     break :blk VIEWPORT_HEIGHT * r;
 };
 const CAMERA_CENTER = Point3.default;
@@ -52,12 +52,10 @@ const PIXEL00_LOC = blk: {
     break :blk result.add_vv(VIEWPORT_UPPER_LEFT);
 };
 
-fn ray_color(
-    ray: *Ray
-) Color {
+fn ray_color(ray: *Ray) Color {
     const unit_direction = ray.dir.unitVector_v();
-    const a = 0.5*(unit_direction.y + 1.0);
-    return  Color.init(1.0, 1.0, 1.0).multiply_tv(1.0 - a).add_vv(Color.init(0.5, 0.7, 1.0).multiply_tv(a));
+    const a = 0.5 * (unit_direction.y + 1.0);
+    return Color.init(1.0, 1.0, 1.0).multiply_tv(1.0 - a).add_vv(Color.init(0.5, 0.7, 1.0).multiply_tv(a));
 }
 
 pub fn main() !void {
@@ -73,7 +71,7 @@ pub fn main() !void {
     const file = try std.fs.cwd().createFile("image.ppm", .{});
 
     // PPM Header
-    const header = try std.fmt.allocPrint(allocator, "P3\n{d} {d}\n255\n", .{IMAGE_WIDTH, IMAGE_HEIGHT});
+    const header = try std.fmt.allocPrint(allocator, "P3\n{d} {d}\n255\n", .{ IMAGE_WIDTH, IMAGE_HEIGHT });
     try file.writeAll(header);
     allocator.free(header);
 
