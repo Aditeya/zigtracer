@@ -52,19 +52,25 @@ const PIXEL00_LOC = blk: {
     break :blk result.add_vv(VIEWPORT_UPPER_LEFT);
 };
 
-fn hit_sphere(center: Point3, radius: f64, r: Ray) bool {
+fn hit_sphere(center: Point3, radius: f64, r: Ray) f64 {
     const oc: Vec3 = center.sub_vv(r.origin);
     const a = r.dir.dot_vv(r.dir);
     const b = -2.0 * r.dir.dot_vv(oc);
     const c = oc.dot_vv(oc) - radius * radius;
     const discriminant = b * b - 4 * a * c;
-    return (discriminant >= 0);
+
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - @sqrt(discriminant)) / (2.0 * a);
+    }
 }
 
 fn ray_color(ray: Ray) Color {
-    const p = Point3.init(0, 0, -1);
-    if (hit_sphere(p, 0.5, ray)) {
-        return Color.init(1, 0, 0);
+    const t = hit_sphere(Point3.init(0.0,0.0,-1.0), 0.5, ray);
+    if (t > 0.0) {
+        const N = ray.at(t).sub_vv(Vec3.init(0.0, 0.0, -1.0)).unitVector_v();
+        return Color.init(N.x+1.0, N.y+1.0, N.z+1.0).multiply_tv(0.5);
     }
 
     const unit_direction = ray.dir.unitVector_v();
