@@ -54,15 +54,15 @@ const PIXEL00_LOC = blk: {
 
 fn hit_sphere(center: Point3, radius: f64, r: Ray) f64 {
     const oc: Vec3 = center.sub_vv(r.origin);
-    const a = r.dir.dot_vv(r.dir);
-    const b = -2.0 * r.dir.dot_vv(oc);
-    const c = oc.dot_vv(oc) - radius * radius;
-    const discriminant = b * b - 4 * a * c;
+    const a = r.dir.length_squared();
+    const h = r.dir.dot_vv(oc);
+    const c = oc.length_squared() - radius*radius;
+    const discriminant = h*h - a*c;
 
     if (discriminant < 0) {
         return -1.0;
     } else {
-        return (-b - @sqrt(discriminant)) / (2.0 * a);
+        return (h - @sqrt(discriminant)) / a;
     }
 }
 
